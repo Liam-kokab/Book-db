@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import { StateContext } from '../../helpers/state/StateProvider';
-import SeriesCard from './SeriesCard';
+import SeriesCard from '../../components/SeriesCard/SeriesCard';
 import style from './SeriesOverview.module.scss';
 
 const SeriesOverview = () => {

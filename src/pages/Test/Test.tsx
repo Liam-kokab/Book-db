@@ -11,13 +11,12 @@ const Test = () => {
   };
 
   const buttonAction = async () => {
-    const series = await getSeriesData(input, '55');
+    const series = await getSeriesData(input);
     if (!series.ok) {
       console.error(series.error);
       return;
     }
 
-    console.log(series.data);
   };
 
   return (

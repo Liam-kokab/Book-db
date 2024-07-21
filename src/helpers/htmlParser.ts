@@ -5,6 +5,7 @@ const DATA: Record<string, Document> = {};
 export enum EDocTypes {
   book = 'book',
   series = 'series',
+  author = 'author',
 }
 
 const getUrl = (id: string, type: EDocTypes): string => {
@@ -13,6 +14,8 @@ const getUrl = (id: string, type: EDocTypes): string => {
       return `https://www.goodreads.com/book/show/${id}`;
     case EDocTypes.series:
       return `https://www.goodreads.com/series/${id}`;
+    case EDocTypes.author:
+      return `https://www.goodreads.com/author/show/${id}`;
   }
 
 };

@@ -63,7 +63,7 @@ export enum EPages {
 
 export type TPage = (
   { path: EPages.HOME | EPages.SERIES_OVERVIEW | EPages.SETTINGS | EPages.TEST; } |
-  { path: EPages.BOOK_SERIES; goodReadSeriesId: TGoodReadId; authorId: TOpenLibraryId; }
+  { path: EPages.BOOK_SERIES; goodReadSeriesId: TGoodReadId; }
 );
 
 export type TState = {

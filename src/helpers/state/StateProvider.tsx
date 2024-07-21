@@ -2,7 +2,7 @@ import { createContext, Dispatch, ReactNode, useEffect, useReducer } from 'react
 import { STORAGE_PATH_VALUE_NAME } from '../../app.config';
 import Loading from '../../components/Loading/Loading';
 import { TAuthor, TBook, TBookSeries, EBookStatus, TGoodReadId, TState, TPage, EPages } from '../types';
-import { addBooks, changeBookStatus, seriesAddBook, seriesRemoveBook } from './actionFunctions';
+import { addAuthors, addBooks, addPackage, addSeries, changeBookStatus, seriesAddBook, seriesRemoveBook } from './actionFunctions';
 import { createBackup, doesDirExist, EBackupType, getStateFromStorage, saveState } from './storage';
 
 export enum EActions {
@@ -16,6 +16,7 @@ export enum EActions {
   CHANGE_BOOK_STATUS = 'CHANGE_BOOK_STATUS',
   HAS_VALID_PATH = 'HAS_VALID_PATH',
   SET_PAGE = 'SET_PAGE',
+  ADD_PACKAGE = 'ADD_PACKAGE',
 }
 
 const initialState: TState = {
@@ -29,6 +30,7 @@ const initialState: TState = {
 
 type TAction =
   { type: EActions.SET_PAGE; payload: TPage } |
+  { type: EActions.ADD_PACKAGE; payload: { bookSeries: TBookSeries, books: TBook[], author: TAuthor } } |
   { type: EActions.ADD_SERIES; payload: TBookSeries; } |
   { type: EActions.ADD_BOOKS; payload: TBook[]; } |
   { type: EActions.ADD_AUTHORS; payload: TAuthor; } |
@@ -52,17 +54,14 @@ const reducer = (state: TState, action: TAction): TState => {
     case EActions.SET_STATE:
       return { ...state, ...action.payload };
 
+    case EActions.ADD_PACKAGE:
+      return addPackage(state, action.payload.books, action.payload.bookSeries, action.payload.author);
+
     case EActions.ADD_BOOKS:
       return addBooks(state, action.payload);
 
     case EActions.ADD_SERIES:
-      return {
-        ...state,
-        series: {
-          ...state.series,
-          [action.payload.goodReadSeriesId]: action.payload,
-        },
-      };
+      return addSeries(state, action.payload);
 
     case EActions.SERIES_ADD_BOOK:
       return seriesAddBook(state, action.payload.goodReadSeriesId, action.payload.goodReadId, action.payload.bookStatus);
@@ -74,13 +73,7 @@ const reducer = (state: TState, action: TAction): TState => {
       return changeBookStatus(state, action.payload.goodReadId, action.payload.bookStatus);
 
     case EActions.ADD_AUTHORS:
-      return {
-        ...state,
-        authors: {
-          ...state.authors,
-          [action.payload.id]: action.payload,
-        },
-      };
+      return addAuthors(state, action.payload);
 
     case EActions.HAS_VALID_PATH:
       return {

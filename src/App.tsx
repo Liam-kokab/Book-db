@@ -16,7 +16,7 @@ const CurrentPage = () => {
     case EPages.HOME:
       return <Home />;
     case EPages.BOOK_SERIES:
-      return <BookSeries goodReadSeriesId={currentPage.goodReadSeriesId} authorId={currentPage.authorId} />;
+      return <BookSeries goodReadSeriesId={currentPage.goodReadSeriesId} />;
     case EPages.SERIES_OVERVIEW:
       return <SeriesOverview />;
     case EPages.SETTINGS:

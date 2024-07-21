@@ -1,108 +1,118 @@
 import { ChangeEvent, useContext, useState } from 'react';
-import BookCard from '../../components/BookCard/BookCard';
+import TextInput from '../../components/Input/TextInput';
 import Loading from '../../components/Loading/Loading';
 import PageLayout from '../../components/PageLayout/PageLayout';
 import { sleep } from '../../helpers/promise';
 import { useNavigate } from '../../helpers/state/navigation';
 import { EActions, StateContext } from '../../helpers/state/StateProvider';
-import { EPages, TGoodReadId, TOpenLibraryId } from '../../helpers/types';
-import { getAuthor } from '../../services/author';
-import { search, TBookWithAuthor } from '../../services/search';
+import { EPages, TAuthor, TBook, TBookSeries, TState } from '../../helpers/types';
+import { getSeriesData } from '../../services/series';
 import styles from './Home.module.scss';
 
-type TInput = {
-  author: string,
-  book: string,
-  seriesId: TGoodReadId,
-  authorId: TOpenLibraryId,
+type TData = {
+  bookSeries: TBookSeries;
+  books: TBook[];
+  author: TAuthor;
 };
 
-const INPUT_INIT = {
-  author: '',
-  book: '',
-  seriesId: '',
-  authorId: '',
+const findMissingData = (data: TData, state: TState): string => {
+  if (!state.series[data.bookSeries.goodReadSeriesId]) return 'series';
+  if (!state.authors[data.author.id]) return 'author';
+  return data.books.some((book) => !state.books[book.goodReadId])
+    ? 'books'
+    : '';
 };
 
 const Home = () => {
-  const [{ authors }, dispatch] = useContext(StateContext);
+  const [state, dispatch] = useContext(StateContext);
   const navigate = useNavigate();
-  const [input, setInput] = useState<TInput>(INPUT_INIT);
-  const [books, setBooks] = useState<TBookWithAuthor[] | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [input, setInput] = useState<string>('40419');
+  const [error, setError] = useState<string>('');
+  const [data, setData] = useState<TData | undefined>(undefined);
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const name = event.target.name;
-    setInput(prev => ({ ...prev, [name]: event.target.value }));
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
   };
 
-  const onSearch = async () => {
-    setBooks(undefined);
+  const onSeeSeries = async () => {
     setLoading(true);
-    const res = await search(input.book, input.author, authors);
-    if (!res.ok) {
-      console.error(res.error);
+    const seriesRes = await getSeriesData(input);
+    if (!seriesRes.ok) {
+      setError(seriesRes.error);
+      setLoading(false);
       return;
     }
 
-    setBooks(res.data.books);
+    setData(seriesRes.data);
     setLoading(false);
   };
 
   const goToSeries = async () => {
+    if (!data) return;
     setLoading(true);
-    const authorRes = await getAuthor(input.authorId);
-    if (!authorRes.ok) {
-      console.error(authorRes.error);
+
+    dispatch({ type: EActions.ADD_PACKAGE, payload: data });
+    await sleep(150);
+    dispatch({ type: EActions.SAVE_STATE });
+    await sleep(150);
+    setLoading(false);
+
+    const missingData = findMissingData(data, state);
+    if (missingData) {
+      setError(`Missing data: ${missingData}`);
       return;
     }
 
-    dispatch({ type: EActions.ADD_AUTHORS, payload: authorRes.data });
-    await sleep(20);
-    dispatch({ type: EActions.SAVE_STATE });
-    await sleep(20);
-    navigate({ path: EPages.BOOK_SERIES, goodReadSeriesId: input.seriesId, authorId: input.authorId });
-    setLoading(false);
+    navigate({ path: EPages.BOOK_SERIES, goodReadSeriesId: data.bookSeries.goodReadSeriesId });
   };
 
   return (
     <PageLayout pageName="Home!" className={styles.homePage}>
-      <h3>Manual:</h3>
+      <h1>Welcome to Book-db!</h1>
       <div className={styles.addBookContainer}>
-        <input placeholder="Good reads Series Id" name="seriesId" onChange={onInputChange} value={input.seriesId}/>
-        <input placeholder="Open library Author Id" name="authorId" onChange={onInputChange} value={input.authorId}/>
-        <button onClick={goToSeries} disabled={!(input.authorId.length > 2 && input.seriesId.length > 2)}>Go to Series</button>
+        <TextInput
+          label="Good Read Series Id:"
+          placeholder="Please enter a good read series Id"
+          value={input}
+          onChange={onChange}
+          disabled={loading}
+          className={styles.input}
+        />
+        <button
+          onClick={data ? goToSeries : onSeeSeries}
+          disabled={loading || input.length < 3}
+        >
+          {data ? 'Go to series' : 'See the series'}
+        </button>
       </div>
-      <h3>Search</h3>
-      <div className={styles.addBookContainer}>
-        <input placeholder="Author Name" name="author" onChange={onInputChange} value={input.author}/>
-        <input placeholder="Book Name" name="book" onChange={onInputChange} value={input.book}/>
-        <button onClick={onSearch} disabled={!(input.author.length > 2 && input.book.length > 2)}>Search</button>
-      </div>
-      <div className={styles.bookList}>
-        {loading ? <Loading/> : null}
-        {(books || { length: -1 }).length === 0 ? <div>No books found</div> : null}
-        {
-          (books || []).map(book => (
-            <BookCard
-              book={book}
-              author={book.author}
-              key={book.goodReadId}
-              buttons={[{
-                title: 'Go to Series',
-                onClick: async () => {
-                  dispatch({ type: EActions.ADD_AUTHORS, payload: book.author });
-                  await sleep(20);
-                  dispatch({ type: EActions.SAVE_STATE });
-                  await sleep(20);
-                  navigate({ path: EPages.BOOK_SERIES, goodReadSeriesId: book.goodReadSeriesId, authorId: book.author.id });
-                },
-              }]}
-            />
-          ))
-        }
-      </div>
-      <div id="ifreame"></div>
+      {error ? <p className={styles.error}>{error}</p> : null}
+      {loading ? <Loading /> : null}
+      {
+        data ? (
+          <div className={styles.seriesContainer}>
+            <div className={styles.seriesHeader}>
+              <span>
+                <h2>{data.bookSeries.title}</h2>
+                <p>{data.bookSeries.description}</p>
+              </span>
+              <div className={styles.separator}></div>
+              <span>
+                <h3>Author: {data.author.name}</h3>
+                <img src={data.author.image} alt={data.author.name} />
+              </span>
+            </div>
+            <div className={styles.seriesBookList}>
+              {data.books.map((book) => (
+                <div className={styles.bookContainer} key={book.goodReadId}>
+                  <h4>{book.title}</h4>
+                  <img src={book.image} alt="book cover" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null
+      }
     </PageLayout>
   );
 };
