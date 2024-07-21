@@ -19,7 +19,7 @@ const Home = () => {
   const [, dispatch] = useContext(StateContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const [input, setInput] = useState<string>('40789');
+  const [input, setInput] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<TData | undefined>(undefined);
 
