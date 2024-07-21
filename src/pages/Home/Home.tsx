@@ -25,6 +25,7 @@ const Home = () => {
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
+    setData(undefined);
   };
 
   const onSeeSeries = async () => {
