@@ -69,7 +69,7 @@ const getAuthor = async (series: (TBookRes & { bookNum: string })[]): Promise<TD
     ok: true,
     statusCode: docRes.statusCode,
     data: {
-      id: authorList[0].id,
+      goodReadAuthorId: authorList[0].id,
       name: authorList[0].name,
       birthDate: birthDate ? birthDate.textContent || '' : '',
       image: image || '',
@@ -107,12 +107,12 @@ export const getSeriesData = async (goodReadSeriesId: string): Promise<TDataOrEr
 
   const books = bookListRes.map(({ book, bookNum }, index) => ({
     title: book.bookTitleBare,
-    goodReadId: book.bookId,
+    goodReadBookId: book.bookId,
     image: book.imageUrl,
     description: removeHtmlTags(book.description?.html || ''),
     goodReadSeriesId,
     bookNum,
-    authorId: author.data.id,
+    goodReadAuthorId: author.data.goodReadAuthorId,
     sortNum: index,
     publicationDate: book.publicationDate,
     lastUpdate: Date.now(),
@@ -126,9 +126,9 @@ export const getSeriesData = async (goodReadSeriesId: string): Promise<TDataOrEr
     info: headerProps.subtitle || '',
     lastUpdate: Date.now(),
     books: [],
-    tempBooks: books.map((book) => book.goodReadId),
+    tempBooks: books.map((book) => book.goodReadBookId),
     hiddenBooks: [],
-    authorId: author.data.id,
+    goodReadAuthorId: author.data.goodReadAuthorId,
   };
 
   return {

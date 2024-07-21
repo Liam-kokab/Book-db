@@ -9,7 +9,6 @@ export type TDataOrError<T> = {
 };
 
 export type TGoodReadId = string;
-export type TOpenLibraryId = string;
 
 export enum EBookStatus {
   NO_STATUS = 'NO_STATUS',
@@ -21,7 +20,7 @@ export enum EBookStatus {
 
 export type TAuthor = {
   name: string;
-  id: TOpenLibraryId;
+  goodReadAuthorId: TGoodReadId;
   key: string;
   image: string;
   birthDate: string;
@@ -29,10 +28,10 @@ export type TAuthor = {
 
 export type TBook = {
   title: string;
-  authorId: TOpenLibraryId;
+  goodReadAuthorId: TGoodReadId;
   description: string;
   image: string;
-  goodReadId: TGoodReadId;
+  goodReadBookId: TGoodReadId;
   goodReadSeriesId: TGoodReadId;
   bookNum: string;
   sortNum: number;
@@ -50,7 +49,7 @@ export type TBookSeries = {
   books: TGoodReadId[];
   tempBooks: TGoodReadId[];
   hiddenBooks: TGoodReadId[];
-  authorId: TOpenLibraryId;
+  goodReadAuthorId: TGoodReadId;
 };
 
 export enum EPages {
@@ -69,7 +68,7 @@ export type TPage = (
 export type TState = {
   books: Record<TGoodReadId, TBook | undefined>;
   series: Record<TGoodReadId, TBookSeries | undefined>;
-  authors: Record<TOpenLibraryId, TAuthor | undefined>;
+  authors: Record<TGoodReadId, TAuthor | undefined>;
   ready: boolean;
   hasValidPath: boolean;
   currentPage: TPage;

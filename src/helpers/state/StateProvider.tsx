@@ -1,4 +1,4 @@
-import { createContext, Dispatch, ReactNode, useEffect, useReducer } from 'react';
+import { createContext, Dispatch, ReactNode, useEffect, useReducer, useRef } from 'react';
 import { STORAGE_PATH_VALUE_NAME } from '../../app.config';
 import Loading from '../../components/Loading/Loading';
 import { TAuthor, TBook, TBookSeries, EBookStatus, TGoodReadId, TState, TPage, EPages } from '../types';
@@ -83,10 +83,10 @@ const reducer = (state: TState, action: TAction): TState => {
 
     case EActions.SAVE_STATE:
       saveState(state);
+      return { ...state };
 
-      return state;
     default:
-      return state;
+      throw new Error('Unknown action type');
   }
 };
 
@@ -99,12 +99,13 @@ const onInit = async () => {
 const StateProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const storagePath = localStorage.getItem(STORAGE_PATH_VALUE_NAME);
+  const hasInit = useRef<boolean>(false);
 
   useEffect(() => {
     if (!storagePath && state.currentPage.path !== EPages.SETTINGS) {
       console.log('No storage path, navigating to settings');
       dispatch({ type: EActions.SET_PAGE, payload: { path: EPages.SETTINGS } });
-    } else if (storagePath) {
+    } else if (storagePath && !hasInit.current) {
       onInit()
         .then(async (StateFromStorage) => {
           dispatch({
@@ -114,6 +115,7 @@ const StateProvider = ({ children }: { children: ReactNode }) => {
               hasValidPath: true,
             },
           });
+          hasInit.current = true;
         })
         .catch(() => {
           if (state.currentPage.path !== EPages.SETTINGS) {

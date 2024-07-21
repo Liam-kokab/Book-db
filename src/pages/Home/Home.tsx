@@ -5,7 +5,7 @@ import PageLayout from '../../components/PageLayout/PageLayout';
 import { sleep } from '../../helpers/promise';
 import { useNavigate } from '../../helpers/state/navigation';
 import { EActions, StateContext } from '../../helpers/state/StateProvider';
-import { EPages, TAuthor, TBook, TBookSeries, TState } from '../../helpers/types';
+import { EPages, TAuthor, TBook, TBookSeries } from '../../helpers/types';
 import { getSeriesData } from '../../services/series';
 import styles from './Home.module.scss';
 
@@ -15,19 +15,11 @@ type TData = {
   author: TAuthor;
 };
 
-const findMissingData = (data: TData, state: TState): string => {
-  if (!state.series[data.bookSeries.goodReadSeriesId]) return 'series';
-  if (!state.authors[data.author.id]) return 'author';
-  return data.books.some((book) => !state.books[book.goodReadId])
-    ? 'books'
-    : '';
-};
-
 const Home = () => {
-  const [state, dispatch] = useContext(StateContext);
+  const [, dispatch] = useContext(StateContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const [input, setInput] = useState<string>('40419');
+  const [input, setInput] = useState<string>('40789');
   const [error, setError] = useState<string>('');
   const [data, setData] = useState<TData | undefined>(undefined);
 
@@ -49,22 +41,16 @@ const Home = () => {
   };
 
   const goToSeries = async () => {
-    if (!data) return;
+    if (!data || !data.bookSeries || !data.books.length || !data.author) return;
     setLoading(true);
 
     dispatch({ type: EActions.ADD_PACKAGE, payload: data });
-    await sleep(150);
+    await sleep(50);
     dispatch({ type: EActions.SAVE_STATE });
-    await sleep(150);
+    await sleep(100);
     setLoading(false);
-
-    const missingData = findMissingData(data, state);
-    if (missingData) {
-      setError(`Missing data: ${missingData}`);
-      return;
-    }
-
     navigate({ path: EPages.BOOK_SERIES, goodReadSeriesId: data.bookSeries.goodReadSeriesId });
+
   };
 
   return (
@@ -104,7 +90,7 @@ const Home = () => {
             </div>
             <div className={styles.seriesBookList}>
               {data.books.map((book) => (
-                <div className={styles.bookContainer} key={book.goodReadId}>
+                <div className={styles.bookContainer} key={book.goodReadBookId}>
                   <h4>{book.title}</h4>
                   <img src={book.image} alt="book cover" />
                 </div>

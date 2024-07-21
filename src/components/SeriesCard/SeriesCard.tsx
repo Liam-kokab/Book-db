@@ -1,5 +1,4 @@
 import { useLayoutEffect, useState, useRef, RefObject, MouseEvent } from 'react';
-import { debounce } from '../../helpers/debounce';
 import { useNavigate } from '../../helpers/state/navigation';
 import { useAppState } from '../../helpers/state/useAppState';
 import { maxLength } from '../../helpers/string';
@@ -25,9 +24,8 @@ const calculateLayout = (imagesWidth: number[], containerWidth: number, gap: num
   });
 };
 
-const setLayout = (coversRef: RefObject<HTMLDivElement>) => {
-  console.log(1);
-  if (coversRef.current) {
+const setLayout = (coversRef: RefObject<HTMLDivElement> | null) => {
+  if (coversRef?.current) {
     const xPostions = calculateLayout(
       Array.from(coversRef.current.children).map((child) => child.clientWidth),
       coversRef.current.clientWidth,
@@ -58,7 +56,7 @@ const SeriesCard = ({ series }: { series: TBookSeries }) => {
 
   useLayoutEffect(() => {
     setLayout(coversRef);
-    const handleResize = debounce(() => setLayout(coversRef), 100);
+    const handleResize = () => setLayout(coversRef);
     if (pageRef.current && coversRef.current) {
       window.addEventListener('resize', handleResize);
     }
@@ -76,21 +74,19 @@ const SeriesCard = ({ series }: { series: TBookSeries }) => {
         src={coverImage}
         alt="series cover"
       />
-      <h4 className={style.authorName}>{getAuthor(series.authorId)?.name || 'MISSING AUTHOR'}</h4>
-      <img className={style.authorImg} src={getAuthor(series.authorId)?.image} alt="author" />
+      <h4 className={style.authorName}>{getAuthor(series.goodReadAuthorId)?.name || 'MISSING AUTHOR'}</h4>
+      <img className={style.authorImg} src={getAuthor(series.goodReadAuthorId)?.image} alt="author" />
       <p className={style.description}>{maxLength(series.description, 650)}</p>
       <div className={style.covers} ref={coversRef}>
         {(allBooks.length ? allBooks : tempBooks).map((book, index) => (
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
           <img
-            key={`${book?.goodReadId}-cover`}
+            key={`${book?.goodReadBookId}-cover`}
             src={book?.image}
             alt={book?.title}
             data-url={book?.image}
             onMouseEnter={onCoverHover}
-            {
-              ...(index === allBooks.length ? { onLoad: () => setLayout(coversRef) } : {})
-            }
+            onLoad={() => setLayout(index === allBooks.length - 1 ? coversRef : null)}
           />
         ))}
       </div>

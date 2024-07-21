@@ -16,7 +16,7 @@ type TBookRes = TBookCommon & {
 
 type TBookReturn = TBookCommon & {
   id: string;
-  authorId: string;
+  goodReadAuthorId: string;
   image?: string;
 };
 
@@ -26,7 +26,7 @@ export const getBookByISBN = async (isbn: string): Promise<TDataOrError<TBookRet
     if (!bookRes.ok) return bookRes;
 
     const id = bookRes.data.key.split('/').at(-1) || '';
-    const authorId = bookRes.data.authors[0]?.key?.split('/').at(-1) || '';
+    const goodReadAuthorId = bookRes.data.authors[0]?.key?.split('/').at(-1) || '';
     const image = bookRes.data.covers.at(-1)
       ? `https://covers.openlibrary.org/b/id/${bookRes.data.covers.at(-1)}-M.jpg`
       : undefined;
@@ -37,7 +37,7 @@ export const getBookByISBN = async (isbn: string): Promise<TDataOrError<TBookRet
       data: {
         id,
         title: bookRes.data.title,
-        authorId,
+        goodReadAuthorId,
         image,
         subjects: bookRes.data.subjects,
       },

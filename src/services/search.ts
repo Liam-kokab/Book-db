@@ -1,5 +1,5 @@
 import { fetch2 } from '../helpers/fetch';
-import { EBookStatus, TAuthor, TBook, TDataOrError, TOpenLibraryId } from '../helpers/types';
+import { EBookStatus, TAuthor, TBook, TDataOrError, TGoodReadId } from '../helpers/types';
 import { getAuthors } from './author';
 import { getGoodReadBookData } from './book';
 
@@ -55,7 +55,7 @@ const getDescriptions = async (bookKey: string): Promise<TDataOrError<string>> =
   };
 };
 
-export const search = async (bookName: string, authorName: string, authors: Record<TOpenLibraryId, TAuthor | undefined>)
+export const search = async (bookName: string, authorName: string, authors: Record<TGoodReadId, TAuthor | undefined>)
 : Promise<TDataOrError<TBookSearchReturn>> => {
   const bookNameQ = bookName.trim().split(' ').join('+');
   const authorNameQ = authorName.trim().split(' ').join('+');
@@ -68,7 +68,7 @@ export const search = async (bookName: string, authorName: string, authors: Reco
   const authorsData = authorsRes.data;
 
   const books = await Promise.allSettled(res.data.docs.map(async (book): Promise<TBookWithAuthor> => {
-    const author = authorsData.find((a: TAuthor) => a.id === book.author_key[0]);
+    const author = authorsData.find((a: TAuthor) => a.goodReadAuthorId === book.author_key[0]);
     if (!author) throw new Error('author not found!');
 
     const [
@@ -85,10 +85,10 @@ export const search = async (bookName: string, authorName: string, authors: Reco
     return {
       title: book.title,
       author,
-      authorId: book.author_key[0],
+      goodReadAuthorId: book.author_key[0],
       description: descriptionRes.data,
       image: `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`,
-      goodReadId: book.id_goodreads[0] || '',
+      goodReadBookId: book.id_goodreads[0] || '',
       goodReadSeriesId: goodReadBookDataRes.data.goodReadSeriesId,
       bookNum: '',
       lastUpdate: Date.now(),

@@ -1,6 +1,6 @@
 import { getUniqueArray } from '../helpers/array';
 import { fetch2 } from '../helpers/fetch';
-import { TAuthor, TDataOrError, TOpenLibraryId } from '../helpers/types';
+import { TAuthor, TDataOrError, TGoodReadId } from '../helpers/types';
 
 type TAuthorRes = {
   name: string,
@@ -22,7 +22,7 @@ export const getAuthor = async (authorKey: string): Promise<TDataOrError<TAuthor
     statusCode: 200,
     data: {
       name: data.name || '',
-      id,
+      goodReadAuthorId: id,
       key: data.key || '',
       image: data.photos ? `https://covers.openlibrary.org/b/id/${data.photos.at(-1)}-M.jpg` : '',
       birthDate: data.birth_date || '',
@@ -30,11 +30,11 @@ export const getAuthor = async (authorKey: string): Promise<TDataOrError<TAuthor
   };
 };
 
-export const getAuthors = async (authorKeys: string[], authors: Record<TOpenLibraryId, TAuthor | undefined>): Promise<TDataOrError<TAuthor[]>> => {
-  const authorIds = getUniqueArray(authorKeys.map((author) => author.split('/').at(-1) || ''))
+export const getAuthors = async (authorKeys: string[], authors: Record<TGoodReadId, TAuthor | undefined>): Promise<TDataOrError<TAuthor[]>> => {
+  const goodReadAuthorIds = getUniqueArray(authorKeys.map((author) => author.split('/').at(-1) || ''))
     .filter(Boolean);
 
-  const authorsRes = await Promise.allSettled(authorIds.map((id) => {
+  const authorsRes = await Promise.allSettled(goodReadAuthorIds.map((id) => {
     const authorFromState = authors[id];
     return authorFromState
       ? Promise.resolve({ ok: true, data: authorFromState })

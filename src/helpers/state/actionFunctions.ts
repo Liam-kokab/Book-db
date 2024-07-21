@@ -50,8 +50,8 @@ export const seriesRemoveBook = (state: TState, goodReadSeriesId: TGoodReadId, g
 export const addBooks = (state: TState, books: TBook[]): TState => {
   const newBooks: Record<string, TBook> = {};
   books.forEach((book) => {
-    const prevBook = state.books[book.goodReadId];
-    newBooks[book.goodReadId] = {
+    const prevBook = state.books[book.goodReadBookId];
+    newBooks[book.goodReadBookId] = {
       ...book,
       bookStatus: prevBook ? prevBook.bookStatus : EBookStatus.NO_STATUS,
     };
@@ -80,7 +80,7 @@ export const addAuthors = (state: TState, author: TAuthor): TState => {
     ...state,
     authors: {
       ...state.authors,
-      [author.id]: author,
+      [author.goodReadAuthorId]: author,
     },
   };
 };

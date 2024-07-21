@@ -3,7 +3,7 @@ import { classNames } from '../../helpers/classNames';
 import { EActions, StateContext } from '../../helpers/state/StateProvider';
 import { useAppState } from '../../helpers/state/useAppState';
 import { maxLength } from '../../helpers/string';
-import { EBookStatus, TAuthor, TBook, TGoodReadId, TOpenLibraryId } from '../../helpers/types';
+import { EBookStatus, TAuthor, TBook, TGoodReadId } from '../../helpers/types';
 import styles from './BookCard.module.scss';
 
 type TProps = ({
@@ -13,7 +13,7 @@ type TProps = ({
 }
 | {
   bookId: TGoodReadId;
-  authorId: TOpenLibraryId;
+  goodReadAuthorId: TGoodReadId;
   showStatus?: boolean;
   compactView?: boolean;
 }
@@ -35,8 +35,8 @@ const BookCard = (props: TProps) => {
   const { getBook, getAuthor } = useAppState();
   const isFromStore = 'bookId' in props;
   const book = isFromStore ? getBook(props.bookId) : props.book;
-  const authorData = isFromStore ? getAuthor(props.authorId) : props.author;
-  const bookId = (isFromStore ? props.bookId : book?.goodReadId) || '';
+  const authorData = isFromStore ? getAuthor(props.goodReadAuthorId) : props.author;
+  const bookId = (isFromStore ? props.bookId : book?.goodReadBookId) || '';
 
   const onChangeStatus = (event: ChangeEvent<HTMLSelectElement>) => {
     dispatch({ type: EActions.CHANGE_BOOK_STATUS, payload: { goodReadId: bookId, bookStatus: event.target.value as EBookStatus } });

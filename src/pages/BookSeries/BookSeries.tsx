@@ -45,7 +45,7 @@ const BookSeries = ({ goodReadSeriesId }: {  goodReadSeriesId: TGoodReadId; }) =
                 currentSeries.tempBooks.map(bookId => (
                   <BookCard
                     bookId={bookId}
-                    authorId={currentSeries.authorId}
+                    goodReadAuthorId={currentSeries.goodReadAuthorId}
                     key={bookId}
                     compactView={compactView}
                     buttons={[
@@ -94,7 +94,7 @@ const BookSeries = ({ goodReadSeriesId }: {  goodReadSeriesId: TGoodReadId; }) =
                 currentSeries.books.map(bookId => (
                   <BookCard
                     bookId={bookId}
-                    authorId={currentSeries.authorId}
+                    goodReadAuthorId={currentSeries.goodReadAuthorId}
                     key={bookId}
                     showStatus={true}
                     compactView={compactView}
@@ -129,7 +129,7 @@ const BookSeries = ({ goodReadSeriesId }: {  goodReadSeriesId: TGoodReadId; }) =
                 currentSeries.hiddenBooks.map(bookId => (
                   <BookCard
                     bookId={bookId}
-                    authorId={currentSeries.authorId}
+                    goodReadAuthorId={currentSeries.goodReadAuthorId}
                     key={bookId}
                     compactView={compactView}
                     buttons={[

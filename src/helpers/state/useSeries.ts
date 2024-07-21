@@ -19,7 +19,7 @@ const INIT_SERIES: TBookSeries = {
   books: [],
   tempBooks: [],
   hiddenBooks: [],
-  authorId: '',
+  goodReadAuthorId: '',
 };
 
 export const useSeries = (goodReadSeriesId: string): TReturn => {
