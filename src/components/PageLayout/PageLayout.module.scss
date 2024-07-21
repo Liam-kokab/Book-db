@@ -1,0 +1,110 @@
+.pageLayout {
+  min-height: 100dvh;
+  width: calc(100dvw - calc(var(--margin) * 3));
+  max-width: 1200px;
+  min-width: 900px;
+  position: relative;
+
+  display: grid;
+  gap: var(--margin);
+  grid-template-rows: 7rem calc(100dvh - 10rem);
+  grid-template-columns: 15rem 1fr;
+  padding: 0 var(--margin);
+
+  background-color: var(--color-border);
+
+  > * {
+    margin: 0;
+    background-color: var(--color-background);
+  }
+
+  .title {
+    grid-area: 1 / 1 / 1 / 2;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    h1, h2 {;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .iconButton {
+      border: none;
+      background-color: transparent;
+      fill: var(--color-primary);
+      padding: 0;
+
+      display: flex;
+      align-items: center;
+
+      svg {
+        height: 1.5rem;
+      }
+
+      &:hover {
+        background-color: var(--color-primary);
+        fill: var(--color-background);
+      }
+    }
+  }
+
+  .header {
+    display: flex;
+    position: fixed;
+    margin: 0 var(--margin);
+    width: calc(100dvw - calc(var(--margin) * 4));
+    max-width: calc(1200px - var(--margin));
+    min-width: calc(900px - var(--margin));
+    height: 5.5rem;
+    flex-direction: column;
+    border-bottom: 2px solid var(--color-primary);
+    padding: var(--marginS);
+    box-shadow: 0 7px 10px 5px rgba(0, 0, 0, 0.5);
+    gap: var(--marginS);
+    z-index: 10;
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      a, button {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--color);
+        border: 2px solid var(--color);
+        padding: var(--marginS) var(--margin);
+        background-color: transparent;
+
+        &:hover:not(:disabled) {
+          background-color: var(--color);
+          color: var(--color-background);
+        }
+      }
+
+      nav {
+        height: 3rem;
+        display: flex;
+        gap: var(--margin);
+        justify-content: flex-start;
+      }
+
+      div {
+        height: 3rem;
+        display: flex;
+        gap: var(--margin);
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .main {
+    grid-area: 2 / 1 / 3 / 3;
+  }
+};
+
+

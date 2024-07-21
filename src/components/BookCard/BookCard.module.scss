@@ -1,0 +1,70 @@
+.bookCard {
+  gap: var(--margin);
+  display: grid;
+  grid-template-columns: 10rem 2fr 1fr;
+  grid-template-rows: 3.7rem 9rem 3rem;
+  margin-top: var(--margin);
+  padding: 0 var(--marginS) var(--margin);
+  transition: grid-template-columns 0.5s, grid-template-rows 0.5s, padding 0.5s;
+
+  &:not(:last-child){
+    border-bottom: 5px solid var(--color-background-dark);
+  }
+
+  .bookCover {
+    grid-row: 1 / 4;
+    grid-column: 1 / 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .bookHeader {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+  }
+
+  .bookInfo {
+    grid-row: 1 / 2;
+    grid-column: 3 / 4;
+    text-align: right;
+  }
+
+  .bookHeader, .bookInfo {
+
+    h4 {
+      font-weight: normal;
+    }
+  }
+
+  .bookDescription {
+    grid-row: 2 / 3;
+    grid-column: 2 / 4;
+    margin: 0;
+    line-height: 1.25rem;
+    overflow: clip;
+  }
+
+  .bookActions {
+    grid-row: 3 / 4;
+    grid-column: 2 / 4;
+    display: flex;
+    gap: var(--margin);
+    justify-content: flex-end;
+  }
+
+  &.compactView {
+    grid-template-columns: 7rem 1fr 1fr;
+    grid-template-rows: 1.5rem 0 2.2rem;
+    padding: 0 var(--marginS) var(--marginS);
+
+    transition: grid-template-columns 0.5s, grid-template-rows 0.5s, padding 0.5s;
+
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  }
+}

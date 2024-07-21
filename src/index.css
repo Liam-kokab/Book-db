@@ -1,0 +1,93 @@
+:root {
+  --color-background: #242424;
+  --color-background-dark: #1a1a1a;
+  --color: #f9f9f9;
+  --color-primary: #5761fd;
+  --color-secondary: #2b2957;
+  --color-border: #333;
+  --color-light-background: #9c97ff;
+
+  --margin: 1rem;
+  --marginS: .5rem;
+  --marginL: 2rem;
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--color);
+  background-color: var(--color-background);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--color-secondary);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 100dvw;
+  min-height: 100dvh;
+  justify-content: flex-start;
+  overflow-x: clip;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border: 1px solid var(--color-primary);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-background-dark);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+}
+
+button:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+input {
+  border: 1px solid var(--color-primary);
+  padding: var(--marginS) var(--margin);
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-background-dark);
+  color: var(--color);
+}
+
+input:focus, input:focus-visible,
+button:focus,
+button:focus-visible {
+  outline: none;
+  border-color: var(--color-secondary);
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+

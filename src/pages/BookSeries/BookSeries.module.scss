@@ -1,0 +1,36 @@
+.bookSeries {
+
+  .bookSeriesHeader {
+    background-color: var(--color-light-background);
+    color: var(--color-background-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: var(--marginS) var(--margin);
+
+    &:first-child {
+      margin-bottom: calc(var(--margin) *  2);
+    }
+
+    .buttonContainer {
+      display: flex;
+      gap: var(--margin);
+    }
+  }
+
+  .bookList {
+    margin: calc(var(--margin) * -1) 0 0 0;
+    border-left: 3px solid var(--color-light-background);
+    border-right: 3px solid var(--color-light-background);
+
+    >:first-child {
+      padding-top: var(--margin);
+    }
+
+    >:last-child {
+      border-bottom: var(--color-light-background) 3px solid;
+    }
+  }
+
+}

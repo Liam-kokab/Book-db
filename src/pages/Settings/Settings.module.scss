@@ -1,0 +1,30 @@
+.settingsPage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--margin);
+  padding: var(--margin);
+
+  .setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--margin);
+    width: 100%;
+    padding: 4px 0;
+
+    &:hover {
+      border-top: 2px rgba(87, 97, 253, 0.30) solid;
+      border-bottom: 2px rgba(87, 97, 253, 0.30) solid;
+      padding: 2px 0;
+    }
+
+
+
+    > * {
+      width: calc(50% - var(--margin));
+    }
+
+  }
+}

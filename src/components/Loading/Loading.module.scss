@@ -1,0 +1,54 @@
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  .container {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+  }
+
+  .spinner {
+    grid-area: 1 / 2 / 1 / 2;
+    width: 8rem;
+    height: 8rem;
+    border: 0.5rem solid #f3f3f3;
+    border-top: 0.5rem solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .loadingText {
+    grid-area: 1 / 2 / 1 / 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    animation: textAnimation .3s ease-in-out alternate infinite;
+    font-weight: 200;
+    font-size: 1.5rem;
+    font-family: sans-serif;
+  }
+
+    @keyframes textAnimation {
+      0% {
+        rotate: -2deg;
+        scale: 1;
+      }
+      50% {
+        scale: 1.02;
+      }
+      100% {
+        rotate: 2deg;
+        scale: 1;
+      }
+    }
+}
